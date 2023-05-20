@@ -1,6 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { useSelector } from "react-redux";
+import { selectServerId } from "./serverSlice.jsx";
+
+
 
 const initialState = {
+    serverId: null,
     channelsId:null,
     channelName:null,
 };
@@ -10,6 +15,7 @@ export const channelSlice = createSlice({
     initialState,
     reducers:{
         setChannelInfo:(state, action) => {
+             state.serverId = action.payload.serverId;
              state.channelsId = action.payload.channelsId;
              state.channelName = action.payload.channelName;
         },

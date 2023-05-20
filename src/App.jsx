@@ -13,10 +13,16 @@ function App() {
           <Route exact path="/" element={<Hero/>}/> 
         </Routes>
         <Routes>
-          <Route exact path="/channels" element={<Home/>}/> 
+          <Route exact path="/channels/" element={<Home/>}/> 
         </Routes>
         <Routes>
-          <Route exact path="/channels/:id" element={<Home/>}/> 
+          <Route exact path="/servers/:id" element={<Home/>}/> 
+        </Routes>
+        <Routes>
+          <Route exact path="/servers" element={<Home/>}/> 
+        </Routes>
+        <Routes>
+          <Route exact path="/servers/:id/channels/:id" element={<Home/>}/> 
         </Routes>
       </Router> 
   );

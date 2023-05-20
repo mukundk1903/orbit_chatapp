@@ -13,7 +13,7 @@ function Header() {
         e.preventDefault();
         auth
         .signInWithPopup(provider)
-        .then(() => history("/channels"))
+        .then(() => history("/servers"))
         .catch((error) => alert(error.message));
     };
 
@@ -35,7 +35,7 @@ function Header() {
         <div className='flex space-x-4'>
             <button className='bg-white p-2 rounded-full text-xs md:text-sm px-4 focus:outline-none hover:shadow-2x1 
             hover:text-discord_blurple transition duration-200 ease-in-out whitespace-nowrap font-medium'
-            onClick={ !user ? signIn : () => history("/channels")} >
+            onClick={ !user ? signIn : () => history("/servers")} >
                 {!user ? "Login" : "Open Discord"}
             </button>
         </div>

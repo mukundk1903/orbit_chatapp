@@ -10,7 +10,8 @@ import Chat from './Chat.jsx';
 import { selectServerId, selectServerName } from '../features/serverSlice.jsx';
 import { useSelector } from 'react-redux';
 import className from 'classnames';
-
+import { storage } from '../base.js';
+import AddServerPopup from './AddServerPopup.jsx';
 
 function Home() {
   const [user] = useAuthState(auth);
@@ -19,17 +20,20 @@ function Home() {
   const serverId = useSelector(selectServerId);
   const serverName = useSelector(selectServerName)
   const [loading, setLoading] = useState(true);
+  const [showAddServerPopup, setShowAddServerPopup] = useState(false);
 
   const handleAddServer = () => {
-    const serverName = prompt('Create a new server');
-    const serverImg = prompt('Channel Image Link');
+    setShowAddServerPopup(true);
 
-    if (serverName) {
-      db.collection('servers').add({
-        serverName: serverName,
-        serverImg: serverImg,
-      });
-    }
+
+    // const serverImg = prompt('Channel Image Link');
+
+    // if (serverName) {
+    //   db.collection('servers').add({
+    //     serverName: serverName,
+    //     serverImg: serverImg,
+    //   });
+    // }
   };
 
   const handleAddChannel = () => {
@@ -156,6 +160,9 @@ function Home() {
       <Chat />
     </div>
   </div>
+  {showAddServerPopup && (
+      <AddServerPopup onClose={() => setShowAddServerPopup(false)} />
+  )}
 </>
 );
 } 

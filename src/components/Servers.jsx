@@ -20,11 +20,12 @@ function Servers({id,serverName,serverImg}){
     };
     return (
         <div
-         className='h-12 w-12  object-cover cursor-pointer rounded-full transition-all duration-100
+         className='h-[12] w-27 py-2 px-5 flex flex-row bg-gray-400 cursor-pointer rounded-lg transition-all duration-100
          ease-out hover:rounded-2xl' onClick={setServer}
         >
-            <img src={serverImg} alt=""  className='h-12 w-12  object-cover cursor-pointer rounded-full transition-all duration-400
+            <img src={serverImg} alt=""  className='h-12 w-12  object-cover cursor-pointer rounded-md transition-all duration-400
          ease-out hover:rounded-2xl'  />
+         <p className=' text-black  font-semibold w-[170px] rounded-lg px-2 py-3 hover:rounded-2xl'>{serverName}</p>
         </div>
       )
     }

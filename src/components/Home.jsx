@@ -12,6 +12,7 @@ import { useSelector } from 'react-redux';
 import className from 'classnames';
 import { storage } from '../base.js';
 import AddServerPopup from './AddServerPopup.jsx';
+import logo from '../img/orbit cropped.png'
 
 function Home() {
   const [user] = useAuthState(auth);
@@ -72,14 +73,14 @@ function Home() {
     <>
       {!user && <Navigate to="/" />}
       <div className='flex h-screen'>
-        <div className='flex flex-col space-y-3 bg-discord_serversBg p-3 min-w-max'>
-          <div className='server-Default hover:bg-discord_purple ' >
-            <img src="https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6cc3c481a15a141738_icon_clyde_white_RGB.png"
+        <div className='flex flex-col items-center  space-y-6 bg-gray-600 p-3 '>
+          <div className='server-Default hover:bg-orbit_white ' >
+            <img src={logo}
               alt=""
-              className="h-5"
+              className="h-10"
             />
           </div>
-          <hr className='border-gray-700 border w-8 mx-auto' />
+          <hr className='border-gray-700 border w-[200px] mx-auto' />
           <div className={className('flex flex-col space-y-2 px-2 mb-4',{
           'animate-pulse': serversLoading, // Apply the pulsing animation if loading
         })}
@@ -98,26 +99,27 @@ function Home() {
           <ServerIcon image="https://images.barrons.com/im-492408?width=700&height=1050" />
           <ServerIcon image="https://i.pinimg.com/originals/d3/02/e4/d302e4d06d9afae957b686985215270a.jpg" />
           <ServerIcon image="https://img.freepik.com/free-vector/abstract-hand-drawn-woman-portrait-illustrated_23-2148878220.jpg?w=2000" /> */}
-          <div className='mx-2 mb-4 server-Default hover:bg-discord_green group'>
+          <div className='mx-2 mb-4 w-fit bg-discord_serverBg py-3 px-3 rounded-md flex justify-center
+    items-center cursor-pointer transition-all duration-100 ease-out hover:rounded-2xl hover:bg-orbit_green group'>
             <PlusIcon 
             onClick={handleAddServer}
-            className='text-discord_green h-7 group-hover:text-white' 
+            className='text-orbit_green h-7 group-hover:text-white' 
             />
           </div>
         </div>
-        <div className='bg-discord_channelsBg flex flex-col min-w-max'>
-          <h2 className='flex text-white font-bold text-sm items-center
+        <div className='bg-gray-500 flex flex-col min-w-max'>
+          <h2 className='flex text-white font-semibold text-lg tracking-wide  items-center
                 justify-between border-b border-gray-800 p-4 hover:bg-discord_serverNameHoverBg cursor-pointer'>
             {serverName}
             <ChevronDownIcon
               className='h-5 ml-2'
             />
           </h2>
-          <div className="text-discord_channel flex-grow overflow-y-scroll scrollbar-hide">
+          <div className="text-gray-50 flex-grow overflow-y-scroll scrollbar-hide">
         <div className="flex items-center p-2 mb-2">
-          <ChevronDownIcon className="h-3 mr-2" />
+          <ChevronDownIcon className="h-4 mr-2" />
           <h4 className="font-semibold">Channels</h4>
-          <PlusIcon onClick={handleAddChannel} className="h-6 ml-auto cursor-pointer hover:text-white" />
+          <PlusIcon onClick={handleAddChannel} className="h-8 ml-auto cursor-pointer p-1  hover:bg-gray-600 rounded-md" />
         </div>
         <div className="flex flex-col space-y-2 px-2 mb-4">
         {selectedChannels.map((doc) => (
@@ -156,7 +158,7 @@ function Home() {
               </div>
             </div>
     </div>
-    <div className='bg-[#36393f] flex-grow'>
+    <div className='bg-gray-100 flex-grow'>
       <Chat />
     </div>
   </div>

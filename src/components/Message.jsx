@@ -8,28 +8,28 @@ import { selectChannelId } from '../features/channelSlice.jsx';
 
 
 function Message({id, message,timestamp, name, email, photoURL}) {
-    const channelId = useSelector(selectChannelId);
+    const channelsId = useSelector(selectChannelId);
     const [user] = useAuthState(auth);
 
 
   return (
-    <div className='flex items-center mx-2 p-1 pl-5 my-4 mr-2 hover:bg-[#32353b] rounded-lg group'>
+    <div className='flex items-center mx-2 p-1 pl-5 my-4 mr-2 bg-gray-600 hover:bg-discord_blurple rounded-lg group'>
         <img src={photoURL} alt="" className='h-10 rounded-full cursor-pointer mr-3 hover:shadow-2xl' />
         <div className='flex flex-col'>
             <h4 className='flex items-center space-x-2 font-medium'>
-                <span className='text-white hover:underline text-sm cursor-pointer'>{name}</span>
-                <span className='text-[#72767d] text-xs'>{moment(timestamp?.toDate().getTime()).format("lll")}</span>
+                <span className='text-gray-300 hover:underline text-sm cursor-pointer'>{name}</span>
+                <span className='text-gray-300 font-thin text-xs'>{moment(timestamp?.toDate().getTime()).format("lll")}</span>
             </h4>
-            <p className='text-sm text-[#dcddde]'>{message}</p>
+            <p className='text-[18px] overflow-x-hidden max-w-lg h-fit text-white'>{message}</p>
         </div>
         {user?.email === email && (
-            <div className='hover:bg-[#852522ae] p-1 ml-auto rounded-sm
-             text-[#852622ae] hover:text-white cursor-pointer' 
+            <div className='hover:bg-gray-800 p-1 mr-2 ml-auto rounded-sm
+             text-white hover:text-white cursor-pointer' 
                 onClick={() => 
                 db
                 .collection("channels")
-                .doc(channelId)
-                .collection("message")
+                .doc(channelsId)
+                .collection("messages")
                 .doc(id)
                 .delete()
               }

@@ -54,8 +54,8 @@ function Chat() {
         <header 
         className='flex items-center justify-between space-x-5 border-b border-gray-800 p-4 -mt-1'>
             <div className='flex items-center space-x-1'>
-                <HashtagIcon className='h-6 text-[#72767d]' />
-                <h4 className='text-white font-semibold'>{channelName}</h4>
+                <HashtagIcon className='h-6 text-black' />
+                <h4 className='text-gray-800 text-md font-semibold'>{channelName}</h4>
             </div>
             <div className='flex space-x-3'>
                 <BellIcon className=' h-6 text-discord_chatHeaderIcon'/>
@@ -90,7 +90,8 @@ function Chat() {
             })}
             <div ref={chatRef} className='pb-16'/>
         </main>
-            <div className='flex items-center p-2.5 bg-discord_chatInputBg mx-5 mb-7 rounded-lg'>
+            <div className='bg-slate-600'>
+            <div className='flex items-center mt-3 p-2.5   bg-discord_purple mx-5 mb-7 rounded-lg'>
                 <PlusCircleIcon className='icon mr-4'/>
                 <form className='flex-grow'>
                     <input 
@@ -100,8 +101,8 @@ function Chat() {
                         channelsId?"Message #" + channelName : "Select a Channel" 
                     }
                     className='bg-transparent focus:outline-none 
-                    text-discord_chatInputText w-full placeholder-discord_chatInput
-                    text-sm' 
+                    text-white w-full placeholder-white
+                    text-md' 
                     ref={inputRef}
                     />
                     <button hidden type='submit' onClick={sendMessage}>
@@ -110,6 +111,7 @@ function Chat() {
                 </form>
                 <GiftIcon className='icon mr-2'/>
                 <EmojiHappyIcon className='icon'/>
+            </div>
             </div>
         
     </div>

@@ -48,8 +48,8 @@ function AddServerPopup({ onClose }) {
 
   return (
     <div className="fixed top-0 left-0 w-screen h-screen flex justify-center items-center bg-gray-900 bg-opacity-50">
-      <div className="bg-slate-500 p-4 rounded shadow">
-        <h2 className="text-lg font-bold mb-4">Create a new server</h2>
+      <div className="bg-gray-700 p-4 rounded shadow">
+        <h2 className="text-lg text-white font-semibold tracking-normal mb-4">Create a new server</h2>
         <div className="mb-4">
           <label htmlFor="serverName" className="block text-sm font-medium text-gray-100 pb-2">
             Server Name
@@ -63,21 +63,21 @@ function AddServerPopup({ onClose }) {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="imageFile" className="pb-2 block text-sm font-medium text-gray-100 text-gray-700">
+          <label htmlFor="imageFile" className="pb-2 block text-sm font-medium text-white">
             Server Image
           </label>
           <input
             type="file"
             id="imageFile"
             accept="image/*"
-            className="border-gray-300"
+            className="border-gray-300 "
             onChange={handleImageFileChange}
           />
         </div>
         <div className="flex justify-end">
           <button
             type="button"
-            className="px-4 py-2 text-sm font-medium text-gray-700 rounded shadow-sm mr-2"
+            className="px-4 py-2 text-sm font-medium text-gray-100 rounded shadow-sm mr-2"
             onClick={onClose}
           >
             Cancel

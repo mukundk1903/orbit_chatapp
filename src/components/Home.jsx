@@ -158,7 +158,7 @@ function Home() {
               </div>
             </div>
     </div>
-    <div className='bg-gray-100 flex-grow'>
+    <div className='bg-gray-600 flex-grow'>
       <Chat />
     </div>
   </div>

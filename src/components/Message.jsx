@@ -13,7 +13,7 @@ function Message({id, message,timestamp, name, email, photoURL}) {
 
 
   return (
-    <div className='flex items-center mx-2 p-1 pl-5 my-4 mr-2 bg-gray-600 hover:bg-discord_blurple rounded-lg group'>
+    <div className='flex items-center mx-2 p-1 pl-5 my-4 mr-2 bg-gray-800 hover:bg-discord_blurple rounded-lg group'>
         <img src={photoURL} alt="" className='h-10 rounded-full cursor-pointer mr-3 hover:shadow-2xl' />
         <div className='flex flex-col'>
             <h4 className='flex items-center space-x-2 font-medium'>

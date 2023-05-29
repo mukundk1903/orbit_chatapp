@@ -8,16 +8,20 @@ import { useRef } from 'react';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import firebase from 'firebase/compat/app'; 
 import Message from './Message.jsx';
+import { selectServerId } from '../features/serverSlice.jsx';
 
 
 
 function Chat() {
+    const serverId = useSelector(selectServerId);
     const channelsId = useSelector(selectChannelId); 
     const channelName = useSelector(selectChannelName); 
     const [user] = useAuthState(auth);
-    const [messages] = useCollection(
+    const [messages, loading] = useCollection(
         channelsId && 
         db
+        .collection("servers")
+        .doc(serverId)
         .collection("channels")
         .doc(channelsId)
         .collection("messages")
@@ -37,7 +41,12 @@ function Chat() {
         e.preventDefault();
 
         if (inputRef.current.value !== ""){
-            db.collection("channels").doc(channelsId).collection("messages").add({
+            db.collection('servers')
+            .doc(serverId)
+            .collection("channels")
+            .doc(channelsId)
+            .collection("messages")
+            .add({
                 timestamp:firebase.firestore.FieldValue.serverTimestamp(),
                 message: inputRef.current.value,
                 name: user?.displayName,
@@ -54,13 +63,13 @@ function Chat() {
         <header 
         className='flex items-center justify-between space-x-5 border-b border-gray-800 p-4 -mt-1'>
             <div className='flex items-center space-x-1'>
-                <HashtagIcon className='h-6 text-black' />
-                <h4 className='text-gray-800 text-md font-semibold'>{channelName}</h4>
+                <HashtagIcon className='h-6 text-white' />
+                <h4 className='text-slate-100 text-md font-semibold'>{channelName}</h4>
             </div>
             <div className='flex space-x-3'>
-                <BellIcon className=' h-6 text-discord_chatHeaderIcon'/>
-                <ChatIcon className='h-6 text-discord_chatHeaderIcon'/>
-                <UsersIcon className='h-6 text-discord_chatHeaderIcon'/>
+                <BellIcon className=' h-6 text-gray-400'/>
+                <ChatIcon className='h-6 text-gray-400'/>
+                <UsersIcon className='h-6 text-gray-400'/>
                 <div className='flex bg-[#202225] text-xs p-1 rounded-md'>
                     <input 
                     type="text" 
@@ -69,8 +78,8 @@ function Chat() {
                     />
                     <SearchIcon className='h-4 text-[#4f4f4f] mr-1'/>
                 </div>
-                <InboxIcon className='h-6 text-discord_chatHeaderIcon '/>
-                <QuestionMarkCircleIcon className='h-6 text-discord_chatHeaderIcon '/>
+                <InboxIcon className='h-6 text-gray-400 '/>
+                <QuestionMarkCircleIcon className='h-6 text-gray-400 '/>
             </div>
         </header>
         <main className='flex-grow overflow-y-scroll scrollbar-hide '>

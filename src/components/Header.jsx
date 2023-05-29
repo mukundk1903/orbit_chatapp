@@ -37,7 +37,7 @@ function Header() {
             <button className='bg-discord_blurple p-2 rounded-full text-xs md:text-sm px-10 text-center focus:outline-none hover:shadow-2x1  
             hover:text-gray-100 transition duration-200 ease-in-out whitespace-nowrap font-medium'
             onClick={ !user ? signIn : () => history("/servers")} >
-                {!user ? "Login" : "Open Discord"}
+                {!user ? "Login" : "Open Orbit"}
             </button>
         </div>
         <MenuIcon className='h-9 cursor-pointer text-white lg:hidden'/>

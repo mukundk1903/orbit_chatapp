@@ -5,9 +5,11 @@ import { auth, db } from '../base';
 import { TrashIcon } from '@heroicons/react/outline';
 import { useSelector } from 'react-redux';
 import { selectChannelId } from '../features/channelSlice.jsx';
+import { selectServerId } from '../features/serverSlice.jsx';
 
 
 function Message({id, message,timestamp, name, email, photoURL}) {
+  const serverId = useSelector(selectServerId)
     const channelsId = useSelector(selectChannelId);
     const [user] = useAuthState(auth);
 
@@ -26,7 +28,8 @@ function Message({id, message,timestamp, name, email, photoURL}) {
             <div className='hover:bg-gray-800 p-1 mr-2 ml-auto rounded-sm
              text-white hover:text-white cursor-pointer' 
                 onClick={() => 
-                db
+                db.collection('servers')
+                .doc(serverId)
                 .collection("channels")
                 .doc(channelsId)
                 .collection("messages")

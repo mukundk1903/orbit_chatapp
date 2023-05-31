@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { db, storage } from '../base.js';
+import {auth} from "../base";
+import { useAuthState }  from "react-firebase-hooks/auth"
 
 function AddServerPopup({ onClose }) {
   const [serverName, setServerName] = useState('');
@@ -12,10 +14,12 @@ function AddServerPopup({ onClose }) {
   const handleImageFileChange = (e) => {
     setImageFile(e.target.files[0]);
   };
+  const [user] = useAuthState(auth);
+  const userId = user.uid;
 
   const handleAddServer = () => {
     // Create a new server document in Firestore
-    const newServerRef = db.collection('servers').doc();
+    const newServerRef = db.collection('users').doc(userId).collection('servers').doc(); 
     const newServerId = newServerRef.id;
 
     // Upload the image file to Firebase Storage
@@ -35,6 +39,7 @@ function AddServerPopup({ onClose }) {
         uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
           // Store the server data in Firestore
           newServerRef.set({
+            UserId: userId,
             serverName: serverName,
             serverImg: downloadURL,
           });

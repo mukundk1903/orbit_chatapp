@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setChannelInfo } from '../features/channelSlice.jsx';
 import { selectServerId } from '../features/serverSlice.jsx';
+import {auth} from "../base";
+import { useAuthState }  from "react-firebase-hooks/auth";
 
 
 
@@ -10,16 +12,18 @@ function Channels({id,channelName}) {
   const serverId = useSelector(selectServerId)
   const dispatch = useDispatch();
   const history = useNavigate();
-
+  const [user] = useAuthState(auth);
+  const userId = user.uid;
   const setChannel = () => {
     dispatch(
       setChannelInfo({
+        userId: userId,
         serverId: serverId,
         channelsId: id,
         channelName:channelName,
     })
   );
-  history( '/servers/' + serverId + '/channels/' + id );
+  history("/users/" + userId + '/servers/' + serverId + '/channels/' + id );
   };
 
 

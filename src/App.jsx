@@ -2,7 +2,6 @@ import Header from './components/Header';
 import { BrowserRouter as Router, Routes, Route, } from 'react-router-dom';
 import Hero from './components/Hero';
 import Home from './components/Home.jsx';
-
 function App() {
   return (
       <Router>
@@ -16,13 +15,13 @@ function App() {
           <Route exact path="/channels/" element={<Home/>}/> 
         </Routes>
         <Routes>
-          <Route exact path="/servers/:id" element={<Home/>}/> 
+          <Route exact path="/users/:id/servers/:id" element={<Home/>}/> 
         </Routes>
         <Routes>
-          <Route exact path="/servers" element={<Home/>}/> 
+          <Route exact path="/users/:id" element={<Home/>}/> 
         </Routes>
         <Routes>
-          <Route exact path="/servers/:id/channels/:id" element={<Home/>}/> 
+          <Route exact path="/users/:id/servers/:id/channels/:id" element={<Home/>}/> 
         </Routes>
       </Router> 
   );

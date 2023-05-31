@@ -7,21 +7,31 @@ import Channels from './Channels.jsx';
 import Servers from './Servers.jsx';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import Chat from './Chat.jsx';
-import { selectServerId, selectServerName } from '../features/serverSlice.jsx';
+import { selectServerId, selectServerName,setServerInfo } from '../features/serverSlice.jsx';
 import { useSelector } from 'react-redux';
 import className from 'classnames';
 import { storage } from '../base.js';
 import AddServerPopup from './AddServerPopup.jsx';
 import logo from '../img/orbit cropped.png'
+import { useDispatch } from "react-redux";
+import { resetChannel, selectChannelId } from "../features/channelSlice.jsx";
 
 function Home() {
   const [user] = useAuthState(auth);
   const [channels, channelsLoading] = useCollection(db.collectionGroup('channels'));
-  const [servers, serversLoading] = useCollection(db.collection('servers'));
+  const [servers, serversLoading] = useCollection(db.collectionGroup('servers'));
+  const [users] = useCollection(db.collection('users'));
   const serverId = useSelector(selectServerId);
   const serverName = useSelector(selectServerName)
+
   const [loading, setLoading] = useState(true);
   const [showAddServerPopup, setShowAddServerPopup] = useState(false);
+  const dispatch = useDispatch();
+  const channelId = useSelector(selectChannelId);
+  console.log(channelId)
+
+
+  const userId = auth.currentUser?.uid; 
 
   const handleAddServer = () => {
     setShowAddServerPopup(true);
@@ -37,17 +47,34 @@ function Home() {
     // }
   };
 
+  const handleServerSelect = (serverId, serverName) => {
+    dispatch(resetChannel()); // Reset channel state
+    dispatch(
+      setServerInfo({
+        serverId: serverId,
+        serverName: serverName,
+      })
+    );
+  };
+
+
   const handleAddChannel = () => {
     const channelsName = prompt('Create a New Channel');
-
-    if (channelsName) {
-      db.collection('servers')
+    if (channelsName && userId && serverId) {
+      db.collection('users')
+        .doc(userId)
+        .collection('servers')
         .doc(serverId)
         .collection('channels')
         .add({
+          UserId: userId,
           serverId: serverId,
+          channelId : channelId,
           channelName: channelsName,
         });
+    } else {
+      console.log('Invalid userId or serverId');
+      
     }
   };
 
@@ -64,6 +91,16 @@ function Home() {
       )
     : [];
 
+    const currentUser = users?.docs.find((doc) => doc.id === userId);
+    const selectedServers = currentUser 
+        ? servers?.docs.filter(
+          (doc) => doc.data().UserId === userId
+        )
+        : [];
+
+        if (!user) {
+          return <Navigate to="/" />;
+        }
     
 
 
@@ -86,7 +123,7 @@ function Home() {
         })}
           >
           
-              {servers?.docs.map((doc) => (
+              {selectedServers.map((doc) => (
                 <Servers
                   key={doc.id}
                   id={doc.id}
@@ -134,7 +171,7 @@ function Home() {
           <div className='bg-[#292b2f] flex p-2 justify-between items-center space-x-8'>
               <div className='flex items-center space-x-1 '>
                 <img src={auth.currentUser?.photoURL} 
-                alt="" 
+                alt="img" 
                 className='h-10 rounded-full'
                 onClick={() => auth.signOut()}
                  />
@@ -159,7 +196,7 @@ function Home() {
             </div>
     </div>
     <div className='bg-gray-600 flex-grow'>
-      <Chat />
+    <Chat channelId={channelId} />
     </div>
   </div>
   {showAddServerPopup && (

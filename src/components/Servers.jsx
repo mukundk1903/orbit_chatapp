@@ -1,22 +1,29 @@
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setServerInfo } from '../features/serverSlice.jsx';
+import {auth} from "../base";
+import { useAuthState }  from "react-firebase-hooks/auth";
+import { resetChannelInfo } from '../features/channelSlice.jsx';
 
 import React from 'react'
 
-function Servers({id,serverName,serverImg}){
+function Servers({id,serverName,serverImg,}){
     const dispatch = useDispatch();
     const history = useNavigate();
+    const [user] = useAuthState(auth);
+    const userId = user.uid;
 
     const setServer = () => {
         dispatch(
-            setServerInfo({
-                serverId: id,
-                serverName: serverName,
-                serverImg: serverImg,
-            })
+          setServerInfo({
+            userId: userId,
+            serverId: id,
+            serverName: serverName,
+            serverImg: serverImg,
+          })
         );
-        history('/servers/' + id);
+        dispatch(resetChannelInfo());
+        history("/users/" + userId + '/servers/' + id);
     };
     return (
         <div

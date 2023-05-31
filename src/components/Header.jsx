@@ -4,6 +4,7 @@ import { useAuthState }  from "react-firebase-hooks/auth";
 import {auth, provider} from "../base";
 import {useNavigate} from "react-router-dom"
 import  logo from '../img/orbit cropped.png';
+import { db } from "../base";
 
 
 function Header() {
@@ -11,12 +12,33 @@ function Header() {
     const [user] = useAuthState(auth);
 
     const signIn = (e) => {
-        e.preventDefault();
-        auth
-        .signInWithPopup(provider)
-        .then(() => history("/servers"))
-        .catch((error) => alert(error.message));
-    };
+  e.preventDefault();
+  auth
+    .signInWithPopup(provider)
+    .then((result) => {
+      const user = result.user;
+      const userData = {
+        userId: user.uid,
+        userName: user.displayName,
+      };
+      console.log(userData)
+
+      // Store user data in Firestore
+      db.collection("users")
+        .doc(user.uid)
+        .set(userData, { merge: true })
+        .then(() => {
+          history("/users/" + user.uid); // Redirect to create user component
+        })
+        .catch((error) => {
+          alert("Failed to store user data: " + error.message);
+        });
+    })
+    .catch((error) => {
+      alert("Failed to sign in: " + error.message);
+    });
+};
+
 
   return (
     <header className='flex items-center justify-between py-4 px-6 bg-orbit_white'>
@@ -36,7 +58,7 @@ function Header() {
         <div className='flex space-x-4'>
             <button className='bg-discord_blurple p-2 rounded-full text-xs md:text-sm px-10 text-center focus:outline-none hover:shadow-2x1  
             hover:text-gray-100 transition duration-200 ease-in-out whitespace-nowrap font-medium'
-            onClick={ !user ? signIn : () => history("/servers")} >
+            onClick={ !user ? signIn : () => history("/users/" + user.uid)} >
                 {!user ? "Login" : "Open Orbit"}
             </button>
         </div>

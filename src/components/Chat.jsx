@@ -1,29 +1,36 @@
 import { BellIcon, ChatIcon, EmojiHappyIcon, GiftIcon, HashtagIcon, InboxIcon, PlusCircleIcon, QuestionMarkCircleIcon, SearchIcon, UsersIcon } from '@heroicons/react/outline';
 import React from 'react'
-import { useSelector } from 'react-redux';
-import { selectChannelId, selectChannelName } from '../features/channelSlice.jsx';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '../base.js';
 import { useRef } from 'react';
-import { useCollection } from 'react-firebase-hooks/firestore';
+import { useCollection, useDocument } from 'react-firebase-hooks/firestore';
 import firebase from 'firebase/compat/app'; 
 import Message from './Message.jsx';
 import { selectServerId } from '../features/serverSlice.jsx';
+import { useSelector } from "react-redux";
+import { selectChannelId, selectChannelName } from "../features/channelSlice";
 
 
 
 function Chat() {
     const serverId = useSelector(selectServerId);
-    const channelsId = useSelector(selectChannelId); 
-    const channelName = useSelector(selectChannelName); 
+    const channelId = useSelector(selectChannelId);
+    const channelName = useSelector(selectChannelName);
+    console.log(channelId , channelName);    
     const [user] = useAuthState(auth);
+    const [channels, channelsLoading] = useCollection(db.collectionGroup('channels'));
+  const [servers, serversLoading] = useCollection(db.collectionGroup('servers'));
+  const [users] = useCollection(db.collection('users'));
+  const userId = auth.currentUser?.uid;
     const [messages, loading] = useCollection(
-        channelsId && 
+        channelId &&
         db
+        .collection('users')
+        .doc(userId)
         .collection("servers")
         .doc(serverId)
         .collection("channels")
-        .doc(channelsId)
+        .doc(channelId)
         .collection("messages")
         .orderBy("timestamp","asc")
         );
@@ -41,10 +48,13 @@ function Chat() {
         e.preventDefault();
 
         if (inputRef.current.value !== ""){
-            db.collection('servers')
+            db
+            .collection('users')
+            .doc(userId)
+            .collection('servers')
             .doc(serverId)
             .collection("channels")
-            .doc(channelsId)
+            .doc(channelId)
             .collection("messages")
             .add({
                 timestamp:firebase.firestore.FieldValue.serverTimestamp(),
@@ -105,9 +115,9 @@ function Chat() {
                 <form className='flex-grow'>
                     <input 
                     type="text" 
-                    disabled={!channelsId} 
+                    disabled={!channelId} 
                     placeholder={
-                        channelsId?"Message #" + channelName : "Select a Channel" 
+                        channelId?"Message #" + channelName : "Select a Channel" 
                     }
                     className='bg-transparent focus:outline-none 
                     text-white w-full placeholder-white

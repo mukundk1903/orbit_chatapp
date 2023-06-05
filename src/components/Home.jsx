@@ -54,21 +54,34 @@ function Home() {
   };
 
   const handleAddChannel = () => {
-    const channelsName = prompt('Create a New Channel');
-    if (channelsName && userId && serverId) {
-      db.collection('servers')
-        .doc(serverId)
-        .collection('channels')
-        .add({
-          UserId: userId,
-          serverId: serverId,
-          channelId: channelId,
-          channelName: channelsName,
-        });
+    if (userId && serverId) {
+      // Check if the current user is the admin of the server
+      const isAdmin = selectedServer && selectedServer.data().UserId === userId;
+  
+      // If the user is the admin, prompt for a new channel name
+      if (isAdmin) {
+        const channelName = prompt('Create a New Channel');
+        if (channelName) {
+          db.collection('servers')
+            .doc(serverId)
+            .collection('channels')
+            .add({
+              UserId: userId,
+              serverId: serverId,
+              channelId: channelId,
+              channelName: channelName,
+            });
+        } else {
+          console.log('Invalid channel name');
+        }
+      } else {
+        console.log('Only the admin can add channels');
+      }
     } else {
       console.log('Invalid userId or serverId');
     }
   };
+  
 
   useEffect(() => {
     if (!channelsLoading && !serversLoading) {
@@ -130,7 +143,11 @@ function Home() {
             <div className="flex items-center p-2 mb-2">
               <ChevronDownIcon className="h-4 mr-2" />
               <h4 className="font-semibold">Channels</h4>
-              <PlusIcon onClick={handleAddChannel} className="h-8 ml-auto cursor-pointer p-1 hover:bg-gray-600 rounded-md" />
+              {selectedServer && selectedServer.data().UserId === userId && (
+                <PlusIcon
+                onClick={handleAddChannel}
+                className="h-8 ml-auto cursor-pointer p-1 hover:bg-gray-600 rounded-md"
+                />)}
             </div>
             <div className="flex flex-col space-y-2 px-2 mb-4">
               {selectedChannels.map((doc) => (

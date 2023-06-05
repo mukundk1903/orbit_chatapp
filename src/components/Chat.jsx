@@ -15,7 +15,6 @@ function Chat() {
   const serverId = useSelector(selectServerId);
   const channelId = useSelector(selectChannelId);
   const channelName = useSelector(selectChannelName);
-  console.log(channelId, channelName);    
   const [user] = useAuthState(auth);
   const [channels, channelsLoading] = useCollection(db.collectionGroup('channels'));
   const [servers, serversLoading] = useCollection(db.collectionGroup('servers'));
@@ -33,7 +32,7 @@ function Chat() {
   );
   const inputRef = useRef("");
   const chatRef = useRef(null);
-  const [showShareServerPopup, setShowShareServerPopup] = useState(false); // Added state for showing ShareServerPopup
+  const [showShareServerPopup, setShowShareServerPopup] = useState(false);
 
   const scrollToBottom = () => {
     chatRef.current.scrollIntoView({
@@ -68,6 +67,11 @@ function Chat() {
     scrollToBottom();
   };
 
+  // Check if the current user is the admin
+  const isAdmin = servers?.docs.some(
+    (doc) => doc.id === serverId && doc.data().UserId === userId
+  );
+
   return (
     <div className='flex flex-col h-screen'>
       <header className='flex items-center justify-between space-x-5 border-b border-gray-800 p-4 -mt-1'>
@@ -89,7 +93,12 @@ function Chat() {
           </div>
           <InboxIcon className='h-6 text-gray-400 ' />
           <QuestionMarkCircleIcon className='h-6 text-gray-400 ' />
-          <ShareIcon className='h-6 text-gray-400 hover:text-white' onClick={handleShareServer} />
+          <ShareIcon
+  className={`h-6 text-gray-400 hover:text-white ${
+    isAdmin ? '' : 'hidden'
+  }`}
+  onClick={handleShareServer}
+/>
         </div>
       </header>
       <main className='flex-grow overflow-y-scroll scrollbar-hide '>

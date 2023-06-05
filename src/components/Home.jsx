@@ -78,9 +78,15 @@ function Home() {
 
   const selectedServer = servers?.docs.find((doc) => doc.id === serverId);
   const selectedChannels = selectedServer ? channels?.docs.filter((doc) => doc.data().serverId === selectedServer.id) : [];
-  const filteredServers = servers?.docs.filter((doc) =>  doc.data().UserId === userId
-);
+  const filteredServers = servers?.docs.filter((doc) =>  doc.data().UserId === userId);
+
+  const participantServers = servers?.docs.filter((doc) => {
+    const participants = doc.data().Participants;
+    return participants && Array.isArray(participants) && participants.includes(userId);
+  });
   
+  console.log(participantServers);
+
   if (!user) {
     return <Navigate to="/" />;
   }
@@ -94,22 +100,26 @@ function Home() {
             <img src={logo} alt="" className="h-10" />
           </div>
           <hr className="border-gray-700 border w-[200px] mx-auto" />
-          <div
-            className={classNames('flex flex-col space-y-2 px-2 mb-4', {
-              'animate-pulse': serversLoading,
-            })}
-          >
-{filteredServers && filteredServers.map((doc) => (
-    <Servers key={doc.id} id={doc.id} serverName={doc.data().serverName} serverImg={doc.data().serverImg} />
-))}
-
+          
+          <div className={classNames('flex flex-col space-y-2 px-2 mb-4', {'animate-pulse': serversLoading,})}>
+              <div className=" mb-4 w-full justify-between items-center bg-discord_serverBg py-2 px-4 rounded-md flex flex-row  cursor-pointer ">
+                  <h3 className="text-gray-300 text-md font-medium">Your Servers</h3>
+                  <PlusIcon onClick={handleAddServer} className="text-orbit_green h-7 transition-all duration-100 ease-out hover:rounded-2xl hover:bg-white group group-hover:text-white" />
+              </div>
+              {filteredServers && filteredServers.map((doc) => (
+                <Servers key={doc.id} id={doc.id} serverName={doc.data().serverName} serverImg={doc.data().serverImg} />
+              ))}
+               <hr className="border-gray-700 border w-full mx-auto" />
+              <div className=" mb-4 w-full justify-between items-center bg-discord_serverBg py-2 px-4 rounded-md flex flex-row  cursor-pointer ">
+                <h3 className="text-gray-300 text-md font-medium">Joined Servers</h3>  
+                <PlusIcon onClick={handleJoinServer} className="text-orbit_green h-7 transition-all duration-100 ease-out hover:rounded-2xl hover:bg-white group group-hover:text-white" />
+              </div>
+              {participantServers && participantServers.map((doc) => (
+                <Servers key={doc.id} id={doc.id} serverName={doc.data().serverName} serverImg={doc.data().serverImg} />
+              ))}
           </div>
-          <div className="mx-2 mb-4 w-fit bg-discord_serverBg py-3 px-3 rounded-md flex justify-center items-center cursor-pointer transition-all duration-100 ease-out hover:rounded-2xl hover:bg-orbit_green group">
-            <PlusIcon onClick={handleAddServer} className="text-orbit_green h-7 group-hover:text-white" />
-          </div>
-          <div className="mx-2 mb-4 w-fit bg-discord_serverBg py-3 px-3 rounded-md flex justify-center items-center cursor-pointer transition-all duration-100 ease-out hover:rounded-2xl hover:bg-orbit_green group">
-            <PlusIcon onClick={handleJoinServer} className="text-orbit_green h-7 group-hover:text-white" />
-          </div>
+          
+          
         </div>
         <div className="bg-gray-500 flex flex-col min-w-max">
           <h2 className="flex text-white font-semibold text-lg tracking-wide items-center justify-between border-b border-gray-800 p-4 hover:bg-discord_serverNameHoverBg cursor-pointer">

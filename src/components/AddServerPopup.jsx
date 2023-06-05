@@ -5,12 +5,17 @@ import { useAuthState }  from "react-firebase-hooks/auth"
 
 function AddServerPopup({ onClose }) {
   const [serverName, setServerName] = useState('');
+  const [serverCode, setServerCode] = useState('');
   const [imageFile, setImageFile] = useState(null);
+
 
   const handleServerNameChange = (e) => {
     setServerName(e.target.value);
   };
-
+  
+  const handleServerCodeChange = (e) => {
+    setServerCode(e.target.value);
+  }
   const handleImageFileChange = (e) => {
     setImageFile(e.target.files[0]);
   };
@@ -19,8 +24,9 @@ function AddServerPopup({ onClose }) {
 
   const handleAddServer = () => {
     // Create a new server document in Firestore
-    const newServerRef = db.collection('users').doc(userId).collection('servers').doc(); 
+    const newServerRef = db.collection('servers').doc(); 
     const newServerId = newServerRef.id;
+    const newServerCode = serverCode;
 
     // Upload the image file to Firebase Storage
     const imageRef = storage.ref(`serverImages/${newServerId}`).child(imageFile.name);
@@ -41,6 +47,7 @@ function AddServerPopup({ onClose }) {
           newServerRef.set({
             UserId: userId,
             serverName: serverName,
+            serverCode: newServerCode,
             serverImg: downloadURL,
           });
         });
@@ -65,6 +72,16 @@ function AddServerPopup({ onClose }) {
             className="w-full border-gray-800 rounded-md shadow-sm focus:outline-none focus:border-indigo-500 p-1"
             value={serverName}
             onChange={handleServerNameChange}
+          />
+          <label htmlFor="serverName" className="block text-sm font-medium text-gray-100 pb-2">
+            Server Passcode
+          </label>
+          <input
+            type="text"
+            id="serverCode"
+            className="w-full border-gray-800 rounded-md shadow-sm focus:outline-none focus:border-indigo-500 p-1"
+            value={serverCode}
+            onChange={handleServerCodeChange}
           />
         </div>
         <div className="mb-4">

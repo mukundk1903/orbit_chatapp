@@ -10,6 +10,8 @@ import { selectServerId } from '../features/serverSlice.jsx';
 import { useSelector } from "react-redux";
 import { selectChannelId, selectChannelName } from "../features/channelSlice";
 import ShareServerPopup from './ShareServerPopup.jsx';
+import {  useNavigate } from 'react-router-dom';
+
 
 function Chat() {
   const serverId = useSelector(selectServerId);
@@ -20,6 +22,7 @@ function Chat() {
   const [servers, serversLoading] = useCollection(db.collectionGroup('servers'));
   const [users] = useCollection(db.collection('users'));
   const userId = auth.currentUser?.uid;
+  const history = useNavigate();
   const [messages, loading] = useCollection(
     channelId &&
     db
@@ -94,9 +97,7 @@ function Chat() {
           <InboxIcon className='h-6 text-gray-400 ' />
           <QuestionMarkCircleIcon className='h-6 text-gray-400 ' />
           <ShareIcon
-  className={`h-6 text-gray-400 hover:text-white ${
-    isAdmin ? '' : 'hidden'
-  }`}
+  className={`h-6 text-gray-400 hover:text-white ${isAdmin ? '' : 'hidden'}`}
   onClick={handleShareServer}
 />
         </div>
@@ -143,6 +144,8 @@ function Chat() {
       {showShareServerPopup && (
         <ShareServerPopup serverName={channelName} />
       )}
+      
+      
     </div>
   );
 }

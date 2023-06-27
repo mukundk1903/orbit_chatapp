@@ -7,24 +7,28 @@ import Channels from './Channels.jsx';
 import Servers from './Servers.jsx';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import Chat from './Chat.jsx';
-import { selectServerId, selectServerName, setServerInfo } from '../features/serverSlice.jsx';
+import { selectServerId, selectServerImg, selectServerName, setServerInfo } from '../features/serverSlice.jsx';
 import { useSelector, useDispatch } from 'react-redux';
 import classNames from 'classnames';
 import { resetChannel, selectChannelId } from '../features/channelSlice.jsx';
 import AddServerPopup from './AddServerPopup.jsx';
-
 import JoinServerPopup from './JoinServerPopup.jsx';
 import logo from '../img/orbit cropped.png';
+import Feed from './Feed.jsx';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
+  const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const [channels, channelsLoading] = useCollection(db.collectionGroup('channels'));
   const [servers, serversLoading] = useCollection(db.collectionGroup('servers'));
   const serverId = useSelector(selectServerId);
   const serverName = useSelector(selectServerName);
+  const serverImg = useSelector(selectServerImg);
   const [loading, setLoading] = useState(true);
-  const [showAddServerPopup, setShowAddServerPopup] = useState(false);
   const [showJoinServerPopup, setShowJoinServerPopup] = useState(false);
+  const [showAddServerPopup, setShowAddServerPopup] = useState(false);
+  const [showOpenFeed, setShowOpenFeed] = useState(false);
   const dispatch = useDispatch();
   const channelId = useSelector(selectChannelId);
 
@@ -34,7 +38,12 @@ function Home() {
     setShowAddServerPopup(true);
   };
 
+  const handleopenFeed = () =>{
+    setShowOpenFeed(true);
+  } 
+
   const handleClose = () => {
+    setShowOpenFeed(false);
     setShowAddServerPopup(false);
     setShowJoinServerPopup(false);
   };
@@ -43,12 +52,14 @@ function Home() {
     setShowJoinServerPopup(true);
   };
 
+  
   const handleServerSelect = (serverId, serverName) => {
     dispatch(resetChannel());
     dispatch(
       setServerInfo({
         serverId: serverId,
         serverName: serverName,
+        serverImg: serverImg
       })
     );
   };
@@ -102,7 +113,9 @@ function Home() {
 
   if (!user) {
     return <Navigate to="/" />;
-  }
+  };
+
+  
 
   return (
     <>
@@ -137,7 +150,9 @@ function Home() {
         <div className="bg-gray-500 flex flex-col min-w-max">
           <h2 className="flex text-white font-semibold text-lg tracking-wide items-center justify-between border-b border-gray-800 p-4 hover:bg-discord_serverNameHoverBg cursor-pointer">
             {serverName}
-            <ChevronDownIcon className="h-5 ml-2" />
+            {serverId && <ChevronDownIcon
+             onClick={handleopenFeed}
+             className="h-5 ml-2" />}
           </h2>
           <div className="text-gray-50 flex-grow overflow-y-scroll scrollbar-hide">
             <div className="flex items-center p-2 mb-2">
@@ -185,6 +200,8 @@ function Home() {
     <Chat channelId={channelId} />
     </div>
       </div>
+      
+      {showOpenFeed && <Feed setShowOpenFeed={setShowOpenFeed} onClose={handleClose} />}
       {showAddServerPopup && <AddServerPopup setShowAddServerPopup={setShowAddServerPopup} onClose={handleClose} />}
       {showJoinServerPopup && <JoinServerPopup setShowJoinServerPopup={setShowJoinServerPopup} onClose={handleClose}/>}
     </>

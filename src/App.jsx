@@ -2,6 +2,8 @@ import Header from './components/Header';
 import { BrowserRouter as Router, Routes, Route, } from 'react-router-dom';
 import Hero from './components/Hero';
 import Home from './components/Home.jsx';
+import Feed from './components/Feed.jsx';
+
 function App() {
   return (
       <Router>
@@ -22,6 +24,9 @@ function App() {
         </Routes>
         <Routes>
           <Route exact path="/users/:id/servers/:id/channels/:id" element={<Home/>}/> 
+        </Routes>
+        <Routes>
+          <Route exact path="/users/:id/servers/:id/Feed" element={<Feed/>}/> 
         </Routes>
       </Router> 
   );

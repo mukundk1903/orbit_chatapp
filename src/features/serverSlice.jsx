@@ -23,5 +23,6 @@ export const {setServerInfo} = serverSlice.actions;
 
 export const selectServerId = (state) => state.server.serverId;
 export const selectServerName = (state) => state.server.serverName;
+export const selectServerImg = (state) => state.server.serverImg;
 
 export default serverSlice.reducer;
